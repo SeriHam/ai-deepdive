@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Deepdive 아카이브</title>
+<style>
+  :root{
+    --bg:#0b0d14;--bg2:#11141f;--bg3:#171b28;--card:#1a1e2e;--card-h:#20253a;
+    --border:#252b42;--text:#e4e7f5;--muted:#6b7494;--dim:#454d6b;
+    --hw:#a78bfa;--sw:#22d3ee;--accent:#a78bfa;
+    --header-grad:linear-gradient(160deg,#0f1120 0%,#0b0d14 100%);
+  }
+  [data-theme="light"]{
+    --bg:#f3f4fb;--bg2:#ffffff;--bg3:#eaecf8;--card:#ffffff;--card-h:#f0f1fc;
+    --border:#dde0f0;--text:#1a1d30;--muted:#5a6080;--dim:#8890b0;--accent:#6d28d9;
+    --header-grad:linear-gradient(160deg,#eaebf8 0%,#f3f4fb 100%);
+  }
+  [data-theme="light"] header h1{color:#1a1d30;}
+  [data-theme="light"] .hbadge{background:rgba(109,40,217,.08);border-color:rgba(109,40,217,.2);color:#6d28d9;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;font-size:15px;}
+
+  header{background:var(--header-grad);border-bottom:1px solid var(--border);padding:30px 24px 26px;text-align:center;position:relative;}
+  .hbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.25);color:#a78bfa;font-size:11px;font-weight:600;padding:3px 12px;border-radius:100px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;}
+  header h1{font-size:clamp(20px,4vw,32px);font-weight:800;color:#fff;letter-spacing:-.5px;}
+  header h1 em{font-style:normal;background:linear-gradient(90deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hsub{margin-top:6px;color:var(--muted);font-size:13px;}
+
+  .theme-toggle{position:absolute;top:18px;right:20px;display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:5px 12px 5px 10px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:.2s;user-select:none;}
+  .theme-toggle:hover{color:var(--text);}
+
+  /* TODAY BANNER */
+  .today-banner{max-width:720px;margin:28px auto 0;padding:0 20px;}
+  .today-card{background:linear-gradient(135deg,rgba(167,139,250,.1) 0%,rgba(34,211,238,.07) 100%);border:1px solid rgba(167,139,250,.3);border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;cursor:pointer;transition:.2s;text-decoration:none;color:inherit;}
+  .today-card:hover{border-color:rgba(167,139,250,.6);background:linear-gradient(135deg,rgba(167,139,250,.18) 0%,rgba(34,211,238,.12) 100%);}
+  .today-left{display:flex;align-items:center;gap:14px;}
+  .today-icon{font-size:28px;}
+  .today-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:linear-gradient(90deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px;}
+  .today-date{font-size:20px;font-weight:800;color:var(--text);}
+  .today-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+  .today-badge{background:linear-gradient(90deg,#7c3aed,#0891b2);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:100px;letter-spacing:.5px;white-space:nowrap;}
+
+  /* SECTION */
+  .section{max-width:720px;margin:28px auto 0;padding:0 20px 80px;}
+  .section-title{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+
+  /* DATE CARD */
+  .date-card{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:10px;cursor:pointer;text-decoration:none;color:inherit;transition:background .15s,border-color .15s,transform .1s;}
+  .date-card:hover{background:var(--card-h);border-color:var(--hw);transform:translateX(3px);}
+  .dc-date-block{min-width:100px;}
+  .dc-date{font-size:16px;font-weight:800;color:var(--text);}
+  .dc-day{font-size:12px;color:var(--muted);margin-top:2px;}
+  .dc-divider{width:1px;background:var(--border);height:40px;margin:0 18px;flex-shrink:0;}
+  .dc-tabs{display:flex;gap:16px;flex-wrap:wrap;flex:1;}
+  .dc-tab{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+  .dc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .dc-tab[data-tab="hw"] .dc-dot{background:var(--hw);}
+  .dc-tab[data-tab="sw"] .dc-dot{background:var(--sw);}
+  .dc-count{font-weight:700;color:var(--text);}
+  .dc-total{margin-left:auto;text-align:right;flex-shrink:0;padding-left:16px;}
+  .dc-total-num{font-size:18px;font-weight:800;color:var(--text);}
+  .dc-total-label{font-size:11px;color:var(--muted);}
+  .dc-rumor-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);color:#c4b5fd;border-radius:6px;padding:2px 7px;margin-top:4px;}
+
+  .empty{text-align:center;padding:48px 20px;color:var(--muted);font-size:14px;}
+  .empty-icon{font-size:36px;margin-bottom:12px;}
+  .loading{text-align:center;padding:60px 20px;color:var(--dim);}
+  footer{text-align:center;padding:20px;border-top:1px solid var(--border);color:var(--dim);font-size:12px;}
+  @media(max-width:560px){.dc-divider{margin:0 10px;}.dc-tabs{gap:10px;font-size:11px;}.theme-toggle{top:12px;right:12px;font-size:11px;padding:4px 9px 4px 8px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span id="togIcon">☀️</span><span id="togLabel">라이트</span>
+  </button>
+  <div class="hbadge">🧠 AI Deepdive</div>
+  <h1>AI <em>딥다이브</em> 아카이브</h1>
+  <p class="hsub">날짜를 선택하면 그날의 AI HW·SW 심층 분석을 볼 수 있어요</p>
+</header>
+
+<div class="today-banner" id="todayBanner" style="display:none">
+  <a class="today-card" href="today_deepdive.html">
+    <div class="today-left">
+      <div class="today-icon">🧠</div>
+      <div>
+        <div class="today-label">Today's Deepdive</div>
+        <div class="today-date" id="todayDateLabel">—</div>
+        <div class="today-meta" id="todayMeta"></div>
+      </div>
+    </div>
+    <div class="today-badge">오늘 딥다이브 보기 →</div>
+  </a>
+</div>
+
+<div class="section">
+  <div class="section-title">📂 지난 딥다이브</div>
+  <div id="archiveList"><div class="loading">불러오는 중…</div></div>
+</div>
+
+<footer>🤖 Claude AI가 매일 자동 수집·분석하는 AI Hardware & Software 딥다이브</footer>
+
+<script>
+  const DAYS=['일','월','화','수','목','금','토'];
+  const TAB_LABELS={hw:'🖥 HW',sw:'💡 SW'};
+
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    document.getElementById('togIcon').textContent=t==='light'?'🌙':'☀️';
+    document.getElementById('togLabel').textContent=t==='light'?'다크':'라이트';
+  }
+  function toggleTheme(){
+    const n=(document.documentElement.getAttribute('data-theme')||'dark')==='dark'?'light':'dark';
+    localStorage.setItem('deepdive-theme',n);applyTheme(n);
+  }
+  applyTheme(localStorage.getItem('deepdive-theme')||'dark');
+
+  function getDayLabel(d){return DAYS[new Date(d+'T00:00:00+09:00').getDay()]+'요일';}
+
+  function buildCard(e){
+    const tabsHtml=Object.entries(TAB_LABELS).map(([k,l])=>{
+      const a=(e.counts[k]||{}).articles||0;
+      return `<div class="dc-tab" data-tab="${k}"><span class="dc-dot"></span><span>${l} <span class="dc-count">${a}</span></span></div>`;
+    }).join('');
+    const id=e.date.replace(/-/g,'');
+    return `<a class="date-card" href="backup/deepdive_${id}.html">
+      <div class="dc-date-block"><div class="dc-date">${e.date}</div><div class="dc-day">${getDayLabel(e.date)}</div></div>
+      <div class="dc-divider"></div>
+      <div class="dc-tabs">${tabsHtml}</div>
+      <div class="dc-total">
+        <div class="dc-total-num">${e.totalArticles}</div>
+        <div class="dc-total-label">기사</div>
+        <div class="dc-rumor-badge">⚠️ ${e.totalRumors}</div>
+      </div>
+    </a>`;
+  }
+
+  fetch('dates.json?_='+Date.now())
+    .then(r=>r.json())
+    .then(data=>{
+      data.sort((a,b)=>b.date.localeCompare(a.date));
+      const list=document.getElementById('archiveList');
+      if(!data.length){list.innerHTML='<div class="empty"><div class="empty-icon">📭</div>아직 딥다이브가 없어요</div>';return;}
+      const first=data[0];
+      document.getElementById('todayBanner').style.display='block';
+      document.getElementById('todayDateLabel').textContent=first.dateKo||first.date;
+      document.getElementById('todayMeta').textContent=`HW ${(first.counts.hw||{}).articles||0}개 · SW ${(first.counts.sw||{}).articles||0}개 기사`;
+      const past=data.slice(1);
+      list.innerHTML=past.length?past.map(buildCard).join(''):'<div class="empty"><div class="empty-icon">🗓</div>아직 지난 딥다이브가 없어요.<br>내일부터 여기에 쌓여요.</div>';
+    })
+    .catch(()=>{document.getElementById('archiveList').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div>데이터를 불러올 수 없어요</div>';});
+</script>
+</body>
+</html>

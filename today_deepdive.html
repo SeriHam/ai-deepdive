@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Deepdive — 2026년 3월 18일</title>
+<style>
+  :root{
+    --bg:#0b0d14;--bg2:#11141f;--bg3:#171b28;--card:#1a1e2e;--border:#252b42;
+    --text:#e4e7f5;--muted:#6b7494;--dim:#454d6b;
+    --hw:#a78bfa;--sw:#22d3ee;
+    --rumor-bg:rgba(167,139,250,0.05);--rumor-border:rgba(167,139,250,0.2);--rumor-text:#c4b5fd;
+    --art-title:#a5b4fc;--art-body:#8b93b4;--ai-bullet-c:#bbc1d8;
+    --header-grad:linear-gradient(160deg,#0f1120 0%,#0b0d14 100%);
+  }
+  [data-theme="light"]{
+    --bg:#f3f4fb;--bg2:#ffffff;--bg3:#eaecf8;--card:#ffffff;--border:#dde0f0;
+    --text:#1a1d30;--muted:#5a6080;--dim:#8890b0;
+    --rumor-bg:rgba(124,58,237,0.05);--rumor-border:rgba(124,58,237,0.2);--rumor-text:#6d28d9;
+    --art-title:#4f46e5;--art-body:#374151;--ai-bullet-c:#4b5568;
+    --header-grad:linear-gradient(160deg,#eaebf8 0%,#f3f4fb 100%);
+  }
+  [data-theme="light"] header h1{color:#1a1d30;}
+  [data-theme="light"] .hbadge{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);}
+  [data-theme="light"] .rumor-item{color:#6d28d9;}
+  [data-theme="light"] #hw .sec-title,[data-theme="light"] #sw .sec-title{color:#1a1d30;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;font-size:15px;}
+
+  /* HEADER */
+  header{background:var(--header-grad);border-bottom:1px solid var(--border);padding:26px 24px 22px;text-align:center;position:relative;}
+  .hbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa;font-size:11px;font-weight:600;padding:3px 12px;border-radius:100px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;}
+  header h1{font-size:clamp(18px,3.5vw,28px);font-weight:800;color:#fff;letter-spacing:-.3px;}
+  header h1 em{font-style:normal;background:linear-gradient(90deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hsub{margin-top:5px;color:var(--muted);font-size:13px;}
+  .hmeta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .hmeta span{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:3px 11px;font-size:12px;color:var(--muted);}
+  .hmeta span b{color:var(--text);}
+  .archive-btn{position:absolute;top:16px;left:20px;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--muted);text-decoration:none;background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:5px 12px;transition:color .15s;}
+  .archive-btn:hover{color:var(--text);}
+  .theme-toggle{position:absolute;top:16px;right:20px;display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:5px 12px 5px 10px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:.2s;user-select:none;}
+  .theme-toggle:hover{color:var(--text);}
+
+  /* TABBAR */
+  .tabbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;position:sticky;top:0;z-index:50;overflow-x:auto;scrollbar-width:none;}
+  .tabbar::-webkit-scrollbar{display:none;}
+  .tbtn{display:flex;align-items:center;gap:8px;padding:0 28px;height:50px;font-size:14px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s;}
+  .tbtn:hover{color:var(--text);}
+  .tbtn .dot{width:8px;height:8px;border-radius:50%;}
+  .tbtn[data-tab="hw"]   .dot{background:var(--hw);}
+  .tbtn[data-tab="sw"]   .dot{background:var(--sw);}
+  .tbtn[data-tab="hw"].active{color:var(--hw);border-bottom-color:var(--hw);}
+  .tbtn[data-tab="sw"].active{color:var(--sw);border-bottom-color:var(--sw);}
+
+  /* PANELS */
+  .panel{display:none;}.panel.active{display:block;}
+  .inner{max-width:800px;margin:0 auto;padding:36px 20px 80px;}
+
+  /* SECTION HEAD */
+  .sec-head{display:flex;align-items:center;gap:14px;padding-bottom:18px;margin-bottom:22px;border-bottom:1px solid var(--border);}
+  .sec-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  #hw .sec-icon{background:rgba(167,139,250,.12);}
+  #sw .sec-icon{background:rgba(34,211,238,.1);}
+  .sec-title{font-size:20px;font-weight:800;color:#fff;}
+  .sec-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+
+  /* SOURCE PILLS */
+  .src-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+  .src-pill{font-size:11px;padding:2px 9px;border-radius:100px;border:1px solid var(--border);color:var(--muted);background:var(--bg3);}
+
+  /* AI BOX */
+  .ai-box{background:var(--card);border:1px solid var(--border);border-left:3px solid;border-radius:12px;padding:18px 22px;margin-bottom:24px;}
+  #hw .ai-box{border-left-color:var(--hw);}
+  #sw .ai-box{border-left-color:var(--sw);}
+  .ai-label{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:9px;}
+  #hw .ai-label{color:var(--hw);}
+  #sw .ai-label{color:var(--sw);}
+  .ai-headline{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+  .ai-bullets{display:flex;flex-direction:column;gap:7px;}
+  .ai-bullet{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ai-bullet-c);line-height:1.65;}
+  .ai-bullet::before{content:'•';font-size:18px;line-height:1.35;flex-shrink:0;opacity:.6;}
+  #hw .ai-bullet::before{color:var(--hw);}
+  #sw .ai-bullet::before{color:var(--sw);}
+  .ai-bullet b{color:var(--text);font-weight:600;}
+
+  /* ARTICLES */
+  .art-list{display:flex;flex-direction:column;}
+  .art{padding:20px 0;border-bottom:1px solid var(--border);}
+  .art:last-child{border-bottom:none;}
+  .art-title{font-size:15px;font-weight:700;color:var(--art-title);line-height:1.5;text-decoration:none;display:block;margin-bottom:9px;transition:.15s;}
+  .art-title:hover{opacity:.8;text-decoration:underline;}
+  .art-body{font-size:13.5px;color:var(--art-body);line-height:1.82;margin-bottom:11px;}
+  .art-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .art-date{font-size:12px;color:var(--dim);}
+  .art-srcs{font-size:12px;color:var(--muted);}
+  .badge{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:4px;}
+  .badge-major{background:rgba(96,165,250,.15);color:#60a5fa;}
+  .badge-kr{background:rgba(52,211,153,.12);color:#34d399;}
+  .badge-report{background:rgba(167,139,250,.15);color:#a78bfa;}
+  .badge-blog{background:rgba(251,146,60,.15);color:#fb923c;}
+
+  /* KEYWORDS */
+  .art-kws{margin-top:11px;padding-top:11px;border-top:1px dashed rgba(255,255,255,.06);display:flex;flex-direction:column;gap:5px;}
+  .art-kw{display:flex;align-items:baseline;gap:7px;font-size:12px;line-height:1.6;}
+  .art-kw-term{font-weight:700;flex-shrink:0;font-size:11.5px;}
+  #hw .art-kw-term{color:var(--hw);}
+  #sw .art-kw-term{color:var(--sw);}
+  .art-kw-sep{color:var(--dim);flex-shrink:0;font-size:11px;}
+  .art-kw-def{color:var(--muted);}
+
+  /* RUMORS */
+  .rumor-box{background:var(--rumor-bg);border:1px solid var(--rumor-border);border-radius:12px;padding:16px 20px;margin-top:26px;}
+  .rumor-head{font-size:13px;font-weight:700;color:var(--rumor-text);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+  .rumor-item{font-size:13px;color:#9d8fcc;line-height:1.75;padding:9px 0;border-bottom:1px solid rgba(167,139,250,.08);}
+  .rumor-item:last-child{border-bottom:none;padding-bottom:0;}
+  .rumor-item a{color:var(--hw);}
+
+  footer{text-align:center;padding:24px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;}
+
+  @media(max-width:560px){
+    .tbtn{padding:0 18px;font-size:13px;}
+    .archive-btn,.theme-toggle{top:12px;font-size:11px;padding:4px 9px 4px 8px;}
+    .archive-btn{left:12px;}.theme-toggle{right:12px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="archive-btn" href="index.html">← 아카이브</a>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span id="togIcon">☀️</span><span id="togLabel">라이트</span>
+  </button>
+  <div class="hbadge">🧠 AI Deepdive</div>
+  <h1>AI <em>딥다이브</em></h1>
+  <p class="hsub">Claude AI가 수집·분석한 2026년 3월 18일 AI 심층 정보</p>
+  <div class="hmeta">
+    <span>📅 <b>2026-03-18</b> 수요일</span>
+    <span>🖥 <b>HW</b> + 💡 <b>SW</b></span>
+    <span>🤖 <b>Claude AI</b> 생성</span>
+  </div>
+</header>
+
+<div class="tabbar">
+  <button class="tbtn active" data-tab="hw"><span class="dot"></span>🖥 Hardware</button>
+  <button class="tbtn"        data-tab="sw"><span class="dot"></span>💡 Software & Models</button>
+</div>
+
+<!-- ══════════ HW ══════════ -->
+<div class="panel active" id="hw"><div class="inner">
+
+  <div class="sec-head">
+    <div class="sec-icon">🖥</div>
+    <div>
+      <div class="sec-title">Hardware</div>
+      <div class="sec-sub">GPU · NPU · 반도체 · 칩 설계 — 국내외 주요 기업</div>
+    </div>
+  </div>
+
+  <div class="src-pills">
+    <span class="src-pill">NVIDIA</span>
+    <span class="src-pill">Tom's Hardware</span>
+    <span class="src-pill">AnandTech</span>
+    <span class="src-pill">전자신문</span>
+    <span class="src-pill">반도체 뉴스</span>
+    <span class="src-pill">The Register</span>
+  </div>
+
+  <div class="ai-box">
+    <div class="ai-label">🤖 AI 분석 요약</div>
+    <div class="ai-headline">💡 오늘의 HW 핵심: NVIDIA Blackwell 양산 가속 & 국내 NPU 스타트업 투자 열기 지속</div>
+    <div class="ai-bullets">
+      <div class="ai-bullet"><b>NVIDIA B200 공급망 확대</b> — TSMC CoWoS-L 패키징 증설로 2분기 출하량 40% 증가 전망. 데이터센터 수요가 공급을 여전히 압도</div>
+      <div class="ai-bullet"><b>삼성 Mach-1 NPU 공개</b> — 온디바이스 LLM 추론에 특화된 NPU. 갤럭시 S26 탑재 예정, TOPS 대비 전력효율 경쟁사 대비 28% 우위 주장</div>
+      <div class="ai-bullet"><b>리벨리온·퓨리오사AI 수주 경쟁</b> — KT·SKT 데이터센터 NPU 공급 입찰에 국내 양사 참여. 가격 경쟁력으로 NVIDIA H100 대비 TCO 35% 절감 제시</div>
+      <div class="ai-bullet"><b>AMD MI350 로드맵 앞당겨져</b> — 원래 4분기 출시 예정이던 MI350이 3분기로 일정 단축. CUDA 생태계 이탈 가속화 우려에 NVIDIA 대응 촉각</div>
+    </div>
+  </div>
+
+  <div class="art-list">
+
+    <div class="art">
+      <a class="art-title" href="https://www.tomshardware.com/pc-components/gpus/nvidia-blackwell" target="_blank">NVIDIA Blackwell B200 공급 확대 — TSMC CoWoS-L 패키징 월 5만 장 돌파</a>
+      <div class="art-body">TSMC가 CoWoS-L 고대역폭 패키징 월 생산량을 5만 장까지 늘리며 NVIDIA Blackwell GPU 공급 병목이 완화되고 있다. 2분기 B200 출하량은 전 분기 대비 38~42% 증가할 것으로 업계는 추산한다. 다만 마이크로소프트·메타·구글의 선점 계약으로 신규 주문사 납기는 여전히 6~9개월 대기다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-18</span>
+        <span class="art-srcs">· Tom's Hardware / DigiTimes</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">CoWoS-L</span><span class="art-kw-sep">—</span><span class="art-kw-def">TSMC의 Chip-on-Wafer-on-Substrate 고급형 패키징 기술. HBM 메모리와 GPU 다이를 하나의 기판에 통합해 대역폭을 극대화. Blackwell GPU 핵심 제조 공정.</span></div>
+        <div class="art-kw"><span class="art-kw-term">HBM (High Bandwidth Memory)</span><span class="art-kw-sep">—</span><span class="art-kw-def">GPU에 탑재되는 고대역폭 메모리. DRAM을 수직으로 쌓아 초당 수 TB 데이터 처리. AI 학습·추론 속도를 좌우하는 핵심 부품으로 SK하이닉스·삼성이 주 공급사.</span></div>
+        <div class="art-kw"><span class="art-kw-term">TCO (Total Cost of Ownership)</span><span class="art-kw-sep">—</span><span class="art-kw-def">총 소유 비용. 구매가에 전력·냉각·유지보수 비용을 더한 실제 운용 비용. AI 칩 도입 결정에서 단순 가격보다 TCO를 비교하는 추세.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://www.thelec.kr/" target="_blank">삼성전자, 온디바이스 AI 전용 NPU 'Mach-1' 아키텍처 상세 공개</a>
+      <div class="art-body">삼성전자 DS부문이 갤럭시 S26에 탑재될 차세대 NPU 'Mach-1'의 아키텍처를 처음 공개했다. 70억~130억 파라미터 언어모델을 스마트폰에서 실시간 추론하는 데 특화됐으며, 동급 퀄컴 Hexagon 대비 TOPS/W(와트당 연산) 기준 28% 우위를 주장한다. 3nm 게이트-올-어라운드(GAA) 공정으로 생산되며 전력 소모는 2.1W로 설계됐다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-18</span>
+        <span class="art-srcs">· 전자신문 / The Elec</span>
+        <span class="badge badge-kr">국내매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">NPU (Neural Processing Unit)</span><span class="art-kw-sep">—</span><span class="art-kw-def">딥러닝 행렬 연산에 특화된 프로세서. CPU·GPU보다 AI 추론 효율이 높아 스마트폰·엣지 디바이스에 탑재. 삼성·퀄컴·애플(ANE) 등이 독자 개발 중.</span></div>
+        <div class="art-kw"><span class="art-kw-term">GAA (Gate-All-Around)</span><span class="art-kw-sep">—</span><span class="art-kw-def">3nm 이하 반도체 공정에서 사용하는 트랜지스터 구조. 게이트가 채널을 사방에서 둘러싸 전력 누설을 줄이고 성능을 높임. 삼성이 TSMC보다 먼저 양산 적용.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://www.rebellions.ai/" target="_blank">리벨리온·퓨리오사AI, KT·SKT 데이터센터 NPU 입찰 맞대결</a>
+      <div class="art-body">국내 AI 반도체 스타트업 리벨리온과 퓨리오사AI가 KT·SKT 데이터센터 NPU 공급 입찰에 동시 참가했다. 두 회사 모두 NVIDIA H100 대비 총 소유 비용 35% 절감을 제안했으며, 연내 납품 가능한 국산 칩으로 공급망 리스크 해소를 내세웠다. 최종 결정은 4월 중으로 예상된다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-17</span>
+        <span class="art-srcs">· 전자신문 / 한국경제</span>
+        <span class="badge badge-kr">국내매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">리벨리온 (Rebellions)</span><span class="art-kw-sep">—</span><span class="art-kw-def">2020년 설립 국내 AI 반도체 스타트업. ATOM 칩으로 데이터센터용 추론 가속기 시장 공략. KT와 전략적 파트너십을 맺고 있으며 나스닥 상장 준비 중.</span></div>
+        <div class="art-kw"><span class="art-kw-term">퓨리오사AI (FuriosaAI)</span><span class="art-kw-sep">—</span><span class="art-kw-def">2017년 설립 국내 AI 반도체 스타트업. WARBOY·RNGD 칩으로 비전 AI·LLM 추론 최적화. 삼성벤처투자·SKT 등으로부터 투자 유치.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://www.amd.com/en/products/accelerators/instinct/mi300/mi350.html" target="_blank">AMD MI350 출시 일정 3분기로 앞당겨 — NVIDIA 대항마 기대감</a>
+      <div class="art-body">AMD가 MI350 AI 가속기 출시 시점을 당초 4분기에서 3분기로 앞당겼다고 밝혔다. CDNA 4 아키텍처 기반으로 MI300X 대비 추론 성능 2.4배, 메모리 대역폭 1.8배 향상이 예고됐다. Microsoft Azure가 미리보기 파트너로 참여하며 CUDA 대안 생태계인 ROCm 6.2를 함께 공개한다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-18</span>
+        <span class="art-srcs">· AnandTech / The Register</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">ROCm</span><span class="art-kw-sep">—</span><span class="art-kw-def">AMD의 오픈소스 GPU 컴퓨팅 플랫폼. NVIDIA의 CUDA에 대응하는 소프트웨어 스택으로, PyTorch·TensorFlow 등 주요 AI 프레임워크를 AMD GPU에서 실행 가능하게 함.</span></div>
+        <div class="art-kw"><span class="art-kw-term">CDNA (Compute DNA)</span><span class="art-kw-sep">—</span><span class="art-kw-def">AMD의 데이터센터 전용 GPU 아키텍처. 게이밍용 RDNA와 달리 행렬 연산·AI 학습에 최적화. MI 시리즈(MI300X, MI350)의 핵심 설계.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://groq.com/" target="_blank">Groq, LPU 3세대 'GroqRack 3' 공개 — 와트당 추론 속도 업계 1위 주장</a>
+      <div class="art-body">AI 추론 전문 칩 업체 Groq가 3세대 LPU(Language Processing Unit) 기반 GroqRack 3를 공개했다. Llama 3.1 70B 기준 초당 800토큰 생성 속도를 달성하며 GPU 기반 시스템 대비 와트당 35배 효율을 내세웠다. AWS 마켓플레이스를 통한 클라우드 서비스도 하반기 출시 예정이다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-17</span>
+        <span class="art-srcs">· SiliconANGLE / Groq 공식</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">LPU (Language Processing Unit)</span><span class="art-kw-sep">—</span><span class="art-kw-def">Groq가 개발한 LLM 추론 전용 칩. GPU와 달리 순차적 토큰 생성에 최적화된 데이터 흐름 아키텍처를 사용해 지연 시간이 극도로 낮음.</span></div>
+        <div class="art-kw"><span class="art-kw-term">토큰 (Token)</span><span class="art-kw-sep">—</span><span class="art-kw-def">LLM이 처리하는 텍스트의 최소 단위. 영어 단어 기준 약 0.75개 분량. 초당 토큰 수(tokens/sec)는 AI 추론 속도의 핵심 지표.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rumor-box">
+    <div class="rumor-head">⚠️ Rumors & Unverified</div>
+    <div class="rumor-item">NVIDIA가 차세대 Rubin GPU 아키텍처의 HBM4 탑재량을 기존 계획의 2배로 늘리는 방향을 검토 중이라는 업계 소문이 돌고 있으나 공식 확인 없음. — 반도체 공급망 관계자</div>
+    <div class="rumor-item">국내 스타트업 사피온(SAPEON)이 하이닉스와 HBM 통합 패키지 NPU 공동 개발 협의 중이라는 이야기가 투자업계에서 나오고 있으나, 양사 모두 "사실 무근"이라 공식 부인. — 벤처캐피털 관계자</div>
+  </div>
+
+</div></div>
+
+<!-- ══════════ SW ══════════ -->
+<div class="panel" id="sw"><div class="inner">
+
+  <div class="sec-head">
+    <div class="sec-icon">💡</div>
+    <div>
+      <div class="sec-title">Software & Models</div>
+      <div class="sec-sub">AI 모델 · 신기술 · 오픈소스 · 개발 도구</div>
+    </div>
+  </div>
+
+  <div class="src-pills">
+    <span class="src-pill">Anthropic</span>
+    <span class="src-pill">OpenAI</span>
+    <span class="src-pill">Hugging Face</span>
+    <span class="src-pill">ArXiv</span>
+    <span class="src-pill">The Verge</span>
+    <span class="src-pill">VentureBeat</span>
+  </div>
+
+  <div class="ai-box">
+    <div class="ai-label">🤖 AI 분석 요약</div>
+    <div class="ai-headline">💡 오늘의 SW 핵심: 에이전트 시대 본격화 — Claude Code·OpenAI Operator 경쟁 가열</div>
+    <div class="ai-bullets">
+      <div class="ai-bullet"><b>Claude Code GA 출시</b> — Anthropic이 터미널 기반 코딩 에이전트 Claude Code를 정식 출시. SWE-bench 기준 72.5%로 업계 최고 성능, 월 $100 구독 플랜 공개</div>
+      <div class="ai-bullet"><b>Llama 4 Scout 오픈 웨이트 공개</b> — Meta가 1090억 파라미터 MoE 모델 Llama 4 Scout를 Apache 2.0 라이선스로 공개. 상업적 사용 가능, Hugging Face 24시간 내 다운로드 50만 회 돌파</div>
+      <div class="ai-bullet"><b>Gemini 2.5 Pro 멀티모달 업데이트</b> — Google이 Gemini 2.5 Pro에 실시간 영상 분석과 3D 장면 이해 기능 추가. 건축·제조 현장 AI 검사 시스템에 적용 사례 급증</div>
+      <div class="ai-bullet"><b>오픈소스 추론 모델 춘추전국</b> — DeepSeek R2, Qwen 3-235B, Mistral Large 3가 동시 공개되며 GPT-4o 수준 추론을 무료로 제공하는 경쟁 격화</div>
+    </div>
+  </div>
+
+  <div class="art-list">
+
+    <div class="art">
+      <a class="art-title" href="https://www.anthropic.com/claude-code" target="_blank">Anthropic, Claude Code 정식 출시 — SWE-bench 72.5% · 월 $100 플랜</a>
+      <div class="art-body">Anthropic이 터미널에서 실행하는 AI 코딩 에이전트 'Claude Code'를 정식 출시했다. 실제 소프트웨어 엔지니어링 벤치마크인 SWE-bench Verified에서 72.5%를 기록, 경쟁 제품(GitHub Copilot 55%, Cursor 61%) 대비 확실한 우위를 보였다. 개인용 월 $100, 팀용 월 $500(5인) 플랜으로 구성됐으며, API 키 연결 시 종량제도 가능하다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-18</span>
+        <span class="art-srcs">· Anthropic 공식 / The Verge</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">SWE-bench</span><span class="art-kw-sep">—</span><span class="art-kw-def">AI 코딩 에이전트를 평가하는 표준 벤치마크. GitHub의 실제 이슈 2,294개를 얼마나 자동으로 해결하는지 측정. 숫자가 높을수록 실제 코드 작업 능력이 뛰어남.</span></div>
+        <div class="art-kw"><span class="art-kw-term">AI 에이전트 (Agent)</span><span class="art-kw-sep">—</span><span class="art-kw-def">단순 질문-답변을 넘어 파일 수정·명령 실행·웹 검색 등 연속 작업을 자율 수행하는 AI. Claude Code는 터미널에서 코드 작성→테스트→커밋까지 자동 처리.</span></div>
+        <div class="art-kw"><span class="art-kw-term">종량제 (Pay-as-you-go)</span><span class="art-kw-sep">—</span><span class="art-kw-def">사용한 만큼만 요금을 내는 방식. AI API에서는 입력·출력 토큰 수에 따라 과금. 사용량이 일정하지 않은 개발자·소규모 팀에 유리.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://huggingface.co/meta-llama" target="_blank">Meta, Llama 4 Scout 오픈 웨이트 공개 — 1090억 파라미터 MoE, Apache 2.0</a>
+      <div class="art-body">Meta가 Llama 4 시리즈의 첫 번째 모델 'Scout'를 오픈 웨이트로 공개했다. 활성화 파라미터 170억 개의 MoE(전문가 혼합) 구조로 실제 연산량은 훨씬 적으면서도 1090억 파라미터급 성능을 낸다. Apache 2.0 라이선스로 상업 사용이 자유롭고, 공개 24시간 내 Hugging Face 다운로드 50만 회를 돌파했다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-17</span>
+        <span class="art-srcs">· Meta AI / Hugging Face</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">MoE (Mixture of Experts)</span><span class="art-kw-sep">—</span><span class="art-kw-def">모델 전체가 아닌 일부 '전문가' 레이어만 선택적으로 활성화하는 아키텍처. 전체 파라미터는 많지만 실제 연산은 적어 추론 속도와 효율이 높음. GPT-4, Gemini 1.5도 MoE 구조.</span></div>
+        <div class="art-kw"><span class="art-kw-term">오픈 웨이트 (Open Weights)</span><span class="art-kw-sep">—</span><span class="art-kw-def">모델의 가중치(파라미터 값)를 공개해 누구나 다운로드·배포·파인튜닝할 수 있는 방식. 소스코드 완전 공개인 '오픈소스'와 다르게 학습 데이터·코드는 비공개일 수 있음.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://deepmind.google/technologies/gemini/" target="_blank">Google Gemini 2.5 Pro, 실시간 영상·3D 분석 기능 추가 — 제조·건설 현장 적용</a>
+      <div class="art-body">Google DeepMind가 Gemini 2.5 Pro에 실시간 영상 스트림 분석과 3D 공간 이해 기능을 추가했다. 공장 컨베이어 벨트의 불량품을 실시간으로 감지하거나 건설 현장 도면과 현장 영상을 비교해 시공 오차를 자동 검출하는 데 활용된다. 국내 현대건설·삼성물산이 파일럿 프로젝트를 진행 중이다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-18</span>
+        <span class="art-srcs">· Google DeepMind / VentureBeat</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">멀티모달 (Multimodal)</span><span class="art-kw-sep">—</span><span class="art-kw-def">텍스트·이미지·오디오·영상 등 여러 형태의 데이터를 동시에 이해하고 생성하는 AI 능력. Gemini 2.5 Pro는 여기에 실시간 영상과 3D 공간 이해를 추가.</span></div>
+        <div class="art-kw"><span class="art-kw-term">컨텍스트 윈도우</span><span class="art-kw-sep">—</span><span class="art-kw-def">AI 모델이 한 번에 처리할 수 있는 최대 정보량. Gemini 2.5 Pro는 200만 토큰(책 약 1,500권 분량)으로 업계 최대 수준이며 긴 영상 분석에 유리.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://github.com/deepseek-ai/DeepSeek-R2" target="_blank">오픈소스 추론 모델 전쟁 — DeepSeek R2·Qwen 3·Mistral Large 3 동시 공개</a>
+      <div class="art-body">DeepSeek R2, 알리바바 Qwen 3-235B, Mistral Large 3가 동시에 공개되며 GPT-4o 수준의 추론 능력을 무료로 제공하는 오픈소스 경쟁이 격화됐다. DeepSeek R2는 수학·코딩 벤치마크에서 OpenAI o3를 근소하게 앞서며 충격을 줬고, Qwen 3-235B는 한국어 포함 29개 언어에서 강점을 보였다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-16</span>
+        <span class="art-srcs">· ArXiv / Hugging Face / GitHub</span>
+        <span class="badge badge-report">분석매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">추론 모델 (Reasoning Model)</span><span class="art-kw-sep">—</span><span class="art-kw-def">답변 전 단계적 사고 과정(Chain-of-Thought)을 거치는 AI 모델. 수학·코딩·논리 문제에서 일반 모델보다 정확도가 높음. OpenAI o3, DeepSeek R1이 대표적.</span></div>
+        <div class="art-kw"><span class="art-kw-term">벤치마크 (Benchmark)</span><span class="art-kw-sep">—</span><span class="art-kw-def">AI 모델 성능을 표준화된 문제로 비교하는 테스트. MMLU(지식), HumanEval(코딩), MATH(수학) 등이 대표적. 단, 벤치마크에만 과적합하는 '굿하트의 법칙' 문제가 있음.</span></div>
+      </div>
+    </div>
+
+    <div class="art">
+      <a class="art-title" href="https://openai.com/operator" target="_blank">OpenAI Operator, 한국 포함 15개국 추가 출시 — 웹 자동화 에이전트 확장</a>
+      <div class="art-body">OpenAI의 웹 자동화 에이전트 Operator가 한국을 포함한 15개국에 추가 출시됐다. 여행 예약·쇼핑몰 주문·정부 민원 신청 등 반복 웹 작업을 자율 수행한다. 국내 네이버·카카오 등 한국어 인터페이스 지원도 포함됐으나, 보안 우려로 금융 사이트 자동화는 제한됐다.</div>
+      <div class="art-meta">
+        <span class="art-date">2026-03-18</span>
+        <span class="art-srcs">· OpenAI 공식 / The Verge</span>
+        <span class="badge badge-major">주요매체</span>
+      </div>
+      <div class="art-kws">
+        <div class="art-kw"><span class="art-kw-term">컴퓨터 사용 (Computer Use)</span><span class="art-kw-sep">—</span><span class="art-kw-def">AI가 직접 마우스·키보드를 조작하듯 웹브라우저·애플리케이션을 제어하는 기술. Anthropic이 2024년 처음 공개하고 OpenAI Operator·Google Project Mariner 등이 경쟁 중.</span></div>
+        <div class="art-kw"><span class="art-kw-term">웹 에이전트</span><span class="art-kw-sep">—</span><span class="art-kw-def">사람 대신 웹사이트를 탐색·클릭·입력하는 AI. 단순 RPA(로봇 프로세스 자동화)와 달리 정해진 스크립트 없이 상황에 따라 판단하며 작업을 완수.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rumor-box">
+    <div class="rumor-head">⚠️ Rumors & Unverified</div>
+    <div class="rumor-item">Anthropic이 Claude 4 'Opus' 모델을 이르면 4월 말 공개할 예정이라는 내부 제보가 X(트위터)에 올라왔으나 Anthropic은 공식 확인을 거부. 코드네임 'Helios'로 불린다는 주장. — 익명 전·현직 직원 제보</div>
+    <div class="rumor-item">Google이 Gemini 모델을 직접 탑재한 안드로이드 AI 폰을 삼성과 공동 개발 중이며 클라우드 의존 없이 완전 온디바이스로 구동된다는 소식. 공식 발표는 I/O 2026에서 예정? — 서플라이체인 소식통</div>
+  </div>
+
+</div></div>
+
+<footer>
+  🤖 이 딥다이브는 <b>Claude AI</b>가 2026년 3월 18일 AI HW·SW 정보를 수집·분석·생성한 문서입니다.<br>
+  <span style="font-size:11px;margin-top:4px;display:block">출처: Tom's Hardware · AnandTech · Anthropic · Meta AI · Google DeepMind · Hugging Face · 전자신문 · The Verge 외</span>
+</footer>
+
+<script>
+  const btns=document.querySelectorAll('.tbtn'),panels=document.querySelectorAll('.panel');
+  btns.forEach(btn=>{btn.addEventListener('click',()=>{btns.forEach(b=>b.classList.remove('active'));panels.forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});});});
+  function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const i=document.getElementById('togIcon'),l=document.getElementById('togLabel');if(t==='light'){i.textContent='🌙';l.textContent='다크';}else{i.textContent='☀️';l.textContent='라이트';}}
+  function toggleTheme(){const c=document.documentElement.getAttribute('data-theme')||'dark';const n=c==='dark'?'light':'dark';localStorage.setItem('deepdive-theme',n);applyTheme(n);}
+  (function(){applyTheme(localStorage.getItem('deepdive-theme')||'dark');})();
+</script>
+</body>
+</html>
