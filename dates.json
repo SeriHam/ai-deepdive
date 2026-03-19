@@ -1,5 +1,22 @@
 [
   {
+    "date": "2026-03-20",
+    "dateKo": "2026년 3월 20일",
+    "day": "금",
+    "counts": {
+      "hw": {
+        "articles": 6,
+        "rumors": 2
+      },
+      "sw": {
+        "articles": 6,
+        "rumors": 2
+      }
+    },
+    "totalArticles": 12,
+    "totalRumors": 4
+  },
+  {
     "date": "2026-03-19",
     "dateKo": "2026년 3월 19일",
     "day": "목",
